@@ -1,0 +1,43 @@
+provider "google" {
+  project = "minecraft-484404"
+  region  = "asia-southeast1"
+  zone    = "asia-southeast1-a"
+}
+
+resource "google_compute_instance" "vm_instance" {
+  name         = "auto-docker-vm"
+  machine_type = "e2-medium"
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+    }
+  }
+
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+
+  metadata_startup_script = file("setup.sh")
+
+  tags = ["http-server"]
+}
+
+resource "google_compute_firewall" "default" {
+  name    = "allow-http"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["http-server"]
+}
+
+output "ip" {
+  value = google_compute_instance.vm_instance.network_interface.0.access_config.0.nat_ip
+}
