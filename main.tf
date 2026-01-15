@@ -5,8 +5,8 @@ provider "google" {
 }
 
 resource "google_compute_instance" "vm_instance" {
-  name         = "auto-docker-vm"
-  machine_type = "e2-medium"
+  name         = "minecraft-vm"
+  machine_type = "e2-standard-2"
 
   boot_disk {
     initialize_params {
