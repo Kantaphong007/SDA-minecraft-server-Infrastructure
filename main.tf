@@ -1,7 +1,7 @@
 provider "google" {
   project = "minecraft-484404"
   region  = "asia-southeast1"
-  zone    = "asia-southeast1-a"
+  zone    = "asia-southeast1-c"
 }
 
 resource "google_compute_instance" "vm_instance" {
