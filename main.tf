@@ -26,7 +26,7 @@ resource "google_compute_instance" "vm_instance" {
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "allow-http"
+  name    = "minecraft-allow-ports"
   network = "default"
 
   allow {
