@@ -56,6 +56,7 @@ resource "google_service_account" "fn_sa" {
 }
 
 resource "google_project_iam_member" "fn_sa_compute" {
+  project = var.project_id
   role   = "roles/compute.storageAdmin"
   member = "serviceAccount:${google_service_account.fn_sa.email}"
   depends_on = [google_project_service.services]
