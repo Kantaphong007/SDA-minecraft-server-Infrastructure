@@ -38,8 +38,11 @@ gcloud auth application-default login
 # ตั้งค่า Project (เปลี่ยนเป็น Project ID ของคุณ)
 gcloud config set project [PROJECT_ID]
 
-# เปิดใช้งาน Compute Engine API
-gcloud services enable compute.googleapis.com
+# เปิดใช้งาน Google Cloud Services ที่จำเป็น
+gcloud services enable \
+  cloudresourcemanager.googleapis.com \
+  iam.googleapis.com \
+  compute.googleapis.com
 ```
 
 ### ขั้นตอนที่ 3: แก้ไขค่าใน `terraform.tfvars`
