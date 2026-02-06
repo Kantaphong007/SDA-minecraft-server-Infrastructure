@@ -11,14 +11,6 @@ terraform {
   }
 }
 
-variable "project_id" { type = string }
-variable "zone"       { type = string  default = "asia-southeast1-c" }
-variable "disk_name"  { type = string }
-variable "retention_minutes" {
-  type    = number
-  default = 1440    # 1 วัน
-}
-
 # เปิด API ที่ต้องใช้
 resource "google_project_service" "services" {
   for_each = toset([

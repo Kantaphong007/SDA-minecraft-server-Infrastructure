@@ -4,10 +4,6 @@ provider "google" {
   zone    = var.zone
 }
 
-variable "project_id" {
-  type = string
-}
-
 # 1. แยก boot disk ออกมา
 resource "google_compute_disk" "minecraft_boot" {
   name  = "minecraft-boot-disk"
