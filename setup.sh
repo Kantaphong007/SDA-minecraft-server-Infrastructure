@@ -12,3 +12,6 @@ git clone https://github.com/Kantaphong007/SDA-minecraft-server-application /hom
 # 4. Run container
 cd /home/ubuntu/project
 sudo make deploy
+
+# 5. ตั้ง cron ให้ flush ทุก 5 นาที
+( sudo crontab -l 2>/dev/null; echo "*/5 * * * * docker exec mc-server rcon-cli save-all flush >>/var/log/mc-flush.log 2>&1" ) | sudo crontab -

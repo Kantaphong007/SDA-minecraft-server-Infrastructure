@@ -42,16 +42,16 @@ gcloud config set project [PROJECT_ID]
 gcloud services enable compute.googleapis.com
 ```
 
-### ขั้นตอนที่ 3: แก้ไขค่าใน `main.tf`
+### ขั้นตอนที่ 3: แก้ไขค่าใน `terraform.tfvars`
 
-เปิดไฟล์ `main.tf` และแก้ไขค่าต่อไปนี้ตามที่ต้องการ:
+เปิดไฟล์ `terraform.tfvars` และแก้ไขค่าต่อไปนี้ตามที่ต้องการ:
 
-```hcl
-provider "google" {
-  project = "[PROJECT_ID]"         # เปลี่ยนเป็น Project ID ของคุณ
-  region  = "asia-southeast1"      # เปลี่ยน Region (ถ้าต้องการ)
-  zone    = "asia-southeast1-c"    # เปลี่ยน Zone (ถ้าต้องการ)
-}
+```
+project_id = "[PROJECT_ID]"         # เปลี่ยนเป็น Project ID ของคุณ
+region     = "asia-southeast1"      # เปลี่ยน Region (ถ้าต้องการ)
+zone       = "asia-southeast1-c"    # เปลี่ยน Zone (ถ้าต้องการ)
+disk_name  = "minecraft-boot-disk"  # เปลี่ยนชื่อ disk (ถ้าต้องการ)
+retention_minutes = 1440            # เปลี่ยน retention minutes (ถ้าต้องการ)
 ```
 
 ### ขั้นตอนที่ 4: รัน Terraform

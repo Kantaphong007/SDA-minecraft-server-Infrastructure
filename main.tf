@@ -1,29 +1,32 @@
 provider "google" {
-  project = "[PROJECT_ID]"
-  region  = "asia-southeast1"
-  zone    = "asia-southeast1-c"
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
 }
 
-# 1. แยก boot disk ออกมาเป็น resource
+variable "project_id" {
+  type = string
+}
+
+# 1. แยก boot disk ออกมา
 resource "google_compute_disk" "minecraft_boot" {
   name  = "minecraft-boot-disk"
-  zone  = "asia-southeast1-c"
+  zone  = var.zone
   type  = "pd-balanced"
-  size  = 20              # GB ปรับได้ตามต้องการ
+  size  = 20
 
   image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2204-lts"
 }
 
-# 2. VM ใช้ boot disk จาก resource ด้านบน
+# 2. VM ใช้ดิสก์นี้เป็น boot disk
 resource "google_compute_instance" "vm_instance" {
   name         = "minecraft-vm"
-  zone         = "asia-southeast1-c"
+  zone         = var.zone
   machine_type = "e2-standard-2"
 
   boot_disk {
     source      = google_compute_disk.minecraft_boot.id
-    auto_delete = true   # ถ้า destroy VM แล้วอยากให้ดิสก์หายด้วย -> true
-                          # ถ้าอยากเก็บดิสก์ไว้แม้ลบ VM -> false
+    auto_delete = true
   }
 
   network_interface {
