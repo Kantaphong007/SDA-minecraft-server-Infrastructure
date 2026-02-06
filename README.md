@@ -37,17 +37,20 @@ gcloud auth application-default login
 
 # ตั้งค่า Project (เปลี่ยนเป็น Project ID ของคุณ)
 gcloud config set project [PROJECT_ID]
+
+# เปิดใช้งาน Compute Engine API
+gcloud services enable compute.googleapis.com
 ```
 
-### ขั้นตอนที่ 3: แก้ไขค่าใน `main.tf` (ถ้าต้องการ)
+### ขั้นตอนที่ 3: แก้ไขค่าใน `main.tf`
 
 เปิดไฟล์ `main.tf` และแก้ไขค่าต่อไปนี้ตามที่ต้องการ:
 
 ```hcl
 provider "google" {
-  project = "minecraft-484404"     # เปลี่ยนเป็น Project ID ของคุณ
-  region  = "asia-southeast1"      # เปลี่ยน Region ถ้าต้องการ
-  zone    = "asia-southeast1-c"    # เปลี่ยน Zone ถ้าต้องการ
+  project = "[PROJECT_ID]"         # เปลี่ยนเป็น Project ID ของคุณ
+  region  = "asia-southeast1"      # เปลี่ยน Region (ถ้าต้องการ)
+  zone    = "asia-southeast1-c"    # เปลี่ยน Zone (ถ้าต้องการ)
 }
 ```
 

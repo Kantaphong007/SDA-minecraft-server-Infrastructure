@@ -1,5 +1,5 @@
 provider "google" {
-  project = "minecraft-484404"
+  project = "[PROJECT_ID]"
   region  = "asia-southeast1"
   zone    = "asia-southeast1-c"
 }
