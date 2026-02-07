@@ -26,8 +26,8 @@ mkdir -p "$APP_DIR/data/plugins"
 cd "$APP_DIR/data/plugins"
 
 # ดาวน์โหลดเฉพาะเมื่อยังไม่มีไฟล์
-if [ ! -f "AuthMe-Reloaded.jar" ]; then
-  wget -O AuthMe-Reloaded.jar "$AUTHME_JAR_URL"
+if [ ! -f "AuthMe-5.4.0.jar" ]; then
+  wget -O AuthMe-5.4.0.jar "$AUTHME_JAR_URL"
 fi
 
 # 5) สตาร์ทเซิร์ฟเวอร์
