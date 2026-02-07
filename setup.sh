@@ -3,7 +3,7 @@ set -e
 
 APP_REPO="https://github.com/Kantaphong007/SDA-minecraft-server-application"
 APP_DIR="/home/ubuntu/project"
-AUTHME_JAR_URL="https://github.com/AuthMe/AuthMeReloaded/releases/download/5.4.0/AuthMe-5.4.0.jar"
+AUTHME_JAR_URL="https://github.com/AuthMe/AuthMeReloaded/releases/download/5.6.0/AuthMe-5.6.0.jar"
 
 # 1) ติดตั้งเครื่องมือที่ต้องใช้
 sudo apt-get update -y
@@ -26,8 +26,8 @@ mkdir -p "$APP_DIR/data/plugins"
 cd "$APP_DIR/data/plugins"
 
 # ดาวน์โหลดเฉพาะเมื่อยังไม่มีไฟล์
-if [ ! -f "AuthMe-5.4.0.jar" ]; then
-  wget -O AuthMe-5.4.0.jar "$AUTHME_JAR_URL"
+if [ ! -f "AuthMe-5.6.0.jar" ]; then
+  wget -O AuthMe-5.6.0.jar "$AUTHME_JAR_URL"
 fi
 
 # 5) สตาร์ทเซิร์ฟเวอร์
