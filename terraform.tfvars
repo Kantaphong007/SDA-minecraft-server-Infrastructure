@@ -1,4 +1,4 @@
-project_id = "minecraftsda"
+project_id = "[PROJECT_ID]"
 region     = "asia-southeast1"
 zone       = "asia-southeast1-c"
 disk_name  = "minecraft-boot-disk"
