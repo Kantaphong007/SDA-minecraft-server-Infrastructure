@@ -18,10 +18,10 @@
 
 ```bash
 # โคลนไฟล์ Infrastructure จาก GitHub
-git clone https://github.com/Kantaphong007/SDA-minecraft-server-application.git
+git clone https://github.com/Kantaphong007/SDA-minecraft-server-Infrastructure.git
 
 # เข้าไปในโฟลเดอร์ terraform
-cd SDA-minecraft-server-application/terraform
+cd SDA-minecraft-server-Infrastructure
 ```
 
 > 📁 โฟลเดอร์นี้จะมีไฟล์ `main.tf` และ `setup.sh` ที่จำเป็นสำหรับสร้าง Server
