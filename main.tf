@@ -4,54 +4,60 @@ provider "google" {
   zone    = var.zone
 }
 
-# 1. แยก boot disk ออกมา
-resource "google_compute_disk" "minecraft_boot" {
-  name  = "minecraft-boot-disk"
-  zone  = var.zone
-  type  = "pd-balanced"
-  size  = 20
-
-  image = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2204-lts"
+# 1. เปิด APIs ที่จำเป็น
+resource "google_project_service" "services" {
+  for_each = toset([
+    "compute.googleapis.com",
+    "container.googleapis.com",
+    "dns.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "run.googleapis.com",
+    "eventarc.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "iam.googleapis.com",
+    "storage.googleapis.com",
+  ])
+  service            = each.value
+  disable_on_destroy = false
 }
 
-# 2. VM ใช้ดิสก์นี้เป็น boot disk
-resource "google_compute_instance" "vm_instance" {
-  name         = "minecraft-vm"
-  zone         = var.zone
-  machine_type = "e2-standard-2"
+# 2. จอง Static IP สำหรับ Load Balancer
+resource "google_compute_address" "mc_static_ip" {
+  name         = "minecraft-static-ip"
+  region       = var.region
+  depends_on   = [google_project_service.services]
+}
 
-  boot_disk {
-    source      = google_compute_disk.minecraft_boot.id
-    auto_delete = true
-  }
+# 3. สร้าง GKE Autopilot Cluster
+resource "google_container_cluster" "primary" {
+  name     = "minecraft-cluster"
+  location = var.region 
 
-  network_interface {
-    network = "default"
-    access_config {}
-  }
+  enable_autopilot = true
+  deletion_protection = false 
 
-  metadata_startup_script = file("${path.module}/setup.sh")
-
-  tags = ["http-server"]
+  depends_on = [google_project_service.services]
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "minecraft-allow-ports"
+  name    = "minecraft-allow-ports-k8s"
   network = "default"
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "25565"]
+    ports    = ["25565"]
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["http-server"]
 }
 
-output "ip" {
-  value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
+# --- OUTPUTS ---
+output "load_balancer_ip" {
+  value = google_compute_address.mc_static_ip.address
 }
 
-output "boot_disk_name" {
-  value = google_compute_disk.minecraft_boot.name
+output "gke_cluster_name" {
+  value = google_container_cluster.primary.name
 }

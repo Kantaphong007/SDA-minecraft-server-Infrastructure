@@ -12,21 +12,21 @@ terraform {
 }
 
 # เปิด API ที่ต้องใช้
-resource "google_project_service" "services" {
-  for_each = toset([
-    "compute.googleapis.com",
-    "cloudfunctions.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "run.googleapis.com",
-    "eventarc.googleapis.com",
-    "cloudscheduler.googleapis.com",
-    "iam.googleapis.com",
-    "storage.googleapis.com",
-  ])
-  service            = each.value
-  disable_on_destroy = false
-}
+#resource "google_project_service" "services" {
+#  for_each = toset([
+#    "compute.googleapis.com",
+#    "cloudfunctions.googleapis.com",
+#   "cloudbuild.googleapis.com",
+#   "artifactregistry.googleapis.com",
+#    "run.googleapis.com",
+#   "eventarc.googleapis.com",
+#   "cloudscheduler.googleapis.com",
+#   "iam.googleapis.com",
+#    "storage.googleapis.com",
+#  ])
+#  service            = each.value
+#  disable_on_destroy = false
+#}
 
 # bucket สำหรับเก็บ zip source
 resource "google_storage_bucket" "fn_bucket" {
@@ -86,7 +86,7 @@ resource "google_cloudfunctions2_function" "mc_snapshot" {
     environment_variables = {
       PROJECT_ID        = var.project_id
       ZONE              = var.zone
-      DISK_NAME         = var.disk_name
+      PVC_NAME          = "minecraft-pvc"
       RETENTION_MINUTES = tostring(var.retention_minutes)
     }
   }
