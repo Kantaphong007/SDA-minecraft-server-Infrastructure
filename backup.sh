@@ -3,7 +3,7 @@ set -e
 
 APP_DIR="/home/ubuntu/project"
 DATA_DIR="${APP_DIR}/data"
-BUCKET="gs://${var.project_id}-mc-backups"   # <-- เปลี่ยนให้ตรงกับ bucket จริง
+BUCKET="gs://${var.project_id}-mc-backups" 
 
 TS="$(date -u +%Y%m%dT%H%M%SZ)"
 OUT="/tmp/mc-data-${TS}.tar.gz"

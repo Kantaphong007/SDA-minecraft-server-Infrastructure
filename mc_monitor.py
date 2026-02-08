@@ -248,7 +248,7 @@ def exporter_thread():
     os.makedirs(os.path.dirname(OUT_JSONL) or ".", exist_ok=True)
 
     with open(OUT_JSONL, "a", encoding="utf-8") as f:
-last_hud = 0.0
+        last_hud = 0.0
 
         while not stop_event.is_set():
             try:
