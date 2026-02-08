@@ -18,10 +18,10 @@ sudo systemctl enable --now cron
 
 # 3) clone app
 if [ ! -d "$APP_DIR" ]; then
-  git clone "$APP_REPO" "$APP_DIR"
+  sudo git clone "$APP_REPO" "$APP_DIR"
 else
   cd "$APP_DIR"
-  git pull
+  sudo git pull
 fi
 
 # 4) AuthMe
