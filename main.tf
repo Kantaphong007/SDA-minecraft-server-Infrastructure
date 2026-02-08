@@ -22,7 +22,7 @@ resource "google_compute_instance" "vm_instance" {
 
   boot_disk {
     source      = google_compute_disk.minecraft_boot.id
-    auto_delete = true
+    auto_delete = false
   }
 
   network_interface {
@@ -36,21 +36,26 @@ resource "google_compute_instance" "vm_instance" {
 
   metadata_startup_script = file("${path.module}/setup.sh")
 
-  tags = ["http-server"]
+  tags = ["minecraft-server"]
 }
 
 resource "google_compute_firewall" "default" {
-  name    = "minecraft-allow-ports"
+  name    = "minecraft-allow-25565"
   network = "default"
+
+  direction = "INGRESS"
+  priority  = 1000
+
+  source_ranges = ["0.0.0.0/0"]  # อนุญาตทุก IP (สำหรับเกม)
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "25565"]
+    ports    = ["25565"]
   }
 
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["http-server"]
+  target_tags = ["minecraft-server"]
 }
+
 
 output "ip" {
   value = google_compute_instance.vm_instance.network_interface[0].access_config[0].nat_ip
