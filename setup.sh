@@ -7,7 +7,8 @@ AUTHME_JAR_URL="https://github.com/AuthMe/AuthMeReloaded/releases/download/5.6.0
 
 # 1) ติดตั้งเครื่องมือที่ต้องใช้
 sudo apt-get update -y
-sudo apt-get install -y docker.io git docker-compose make cron wget google-cloud-cli
+sudo apt-get install -y docker.io git docker-compose make cron wget google-cloud-cli python3 python3-pip
+sudo pip3 install psutil
 
 # 2) start services
 sudo systemctl enable --now docker
