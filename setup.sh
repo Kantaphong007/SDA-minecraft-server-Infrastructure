@@ -5,16 +5,18 @@ APP_REPO="https://github.com/Kantaphong007/SDA-minecraft-server-application"
 APP_DIR="/home/ubuntu/project"
 AUTHME_JAR_URL="https://github.com/AuthMe/AuthMeReloaded/releases/download/5.6.0/AuthMe-5.6.0.jar"
 
-# 1) ติดตั้งเครื่องมือที่ต้องใช้
+# 1) tools
 sudo apt-get update -y
-sudo apt-get install -y docker.io git docker-compose make cron wget google-cloud-cli python3 python3-pip
-sudo pip3 install psutil
+sudo apt-get install -y \
+  docker.io docker-compose git make cron wget \
+  python3 python3-psutil \
+  google-cloud-cli gettext-base
 
-# 2) start services
+# 2) services
 sudo systemctl enable --now docker
 sudo systemctl enable --now cron
 
-# 3) ดึงโค้ดแอป
+# 3) clone app
 if [ ! -d "$APP_DIR" ]; then
   git clone "$APP_REPO" "$APP_DIR"
 else
@@ -22,44 +24,43 @@ else
   git pull
 fi
 
-# 4) วาง AuthMe ลง plugins (เพราะ compose mount ./data -> /data)
+# 4) AuthMe
 mkdir -p "$APP_DIR/data/plugins"
 cd "$APP_DIR/data/plugins"
+[ ! -f AuthMe-5.6.0.jar ] && wget -O AuthMe-5.6.0.jar "$AUTHME_JAR_URL"
 
-# ดาวน์โหลดเฉพาะเมื่อยังไม่มีไฟล์
-if [ ! -f "AuthMe-5.6.0.jar" ]; then
-  wget -O AuthMe-5.6.0.jar "$AUTHME_JAR_URL"
-fi
-
-# 5) สตาร์ทเซิร์ฟเวอร์
+# 5) start minecraft (K8s / docker แล้วแต่ branch)
 cd "$APP_DIR"
-sudo make deploy
+make deploy || true
 
-# 6) ตั้ง cron ให้ flush ทุก 5 นาที
-( sudo crontab -l 2>/dev/null; echo "*/5 * * * * docker exec mc-server rcon-cli save-all flush >>/var/log/mc-flush.log 2>&1" ) | sudo crontab -
+# 6) save flush ทุก 5 นาที
+( sudo crontab -l 2>/dev/null; \
+  echo "*/5 * * * * docker exec mc-server rcon-cli save-all flush >>/var/log/mc-flush.log 2>&1" \
+) | sudo crontab -
 
-# 7. ตั้ง cron backup รายวัน
-( sudo crontab -l 2>/dev/null; echo "10 3 * * * bash /home/ubuntu/project/backup.sh >>/var/log/mc-backup.log 2>&1" ) | sudo crontab -
+# 7) daily backup
+( sudo crontab -l 2>/dev/null; \
+  echo "10 3 * * * bash $APP_DIR/backup.sh >>/var/log/mc-backup.log 2>&1" \
+) | sudo crontab -
 
-echo "=== Create systemd service for mc_monitor ==="
-
-cat <<EOF >/etc/systemd/system/mc-monitor.service
+# 8) mc_monitor service
+cat <<EOF | sudo tee /etc/systemd/system/mc-monitor.service
 [Unit]
 Description=Minecraft Performance Monitor
 After=docker.service
 Wants=docker.service
 
 [Service]
-ExecStart=/usr/bin/python3 /home/ubuntu/project/mc_monitor.py
+ExecStart=/usr/bin/python3 $APP_DIR/mc_monitor.py
 Restart=always
 RestartSec=3
 User=root
-WorkingDirectory=/home/ubuntu/project
+WorkingDirectory=$APP_DIR
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
-systemctl enable mc-monitor
-systemctl start mc-monitor
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl enable --now mc-monitor
