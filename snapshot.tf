@@ -141,7 +141,6 @@ resource "google_cloudfunctions2_function" "mc_snapshot" {
   depends_on = [
     google_project_service.services,
     google_project_iam_member.fn_sa_compute_storage,
-    google_project_iam_member.fn_sa_compute_snapshot,
     google_storage_bucket_object.fn_object
   ]
 }
