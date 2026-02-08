@@ -104,13 +104,6 @@ resource "google_project_iam_member" "fn_sa_compute_storage" {
   depends_on = [google_project_service.services]
 }
 
-resource "google_project_iam_member" "fn_sa_compute_snapshot" {
-  project    = var.project_id
-  role       = "roles/compute.snapshotAdmin"
-  member     = "serviceAccount:${google_service_account.fn_sa.email}"
-  depends_on = [google_project_service.services]
-}
-
 # ----------------------------
 # 5) Cloud Functions Gen2
 # ----------------------------
