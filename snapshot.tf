@@ -19,13 +19,6 @@ terraform {
   }
 }
 
-# ใช้ provider ปกติ
-provider "google" {
-  project = var.project_id
-  region  = var.region
-  zone    = var.zone
-}
-
 # Cloud Functions Gen2 บาง resource ชัวร์สุดใช้ google-beta
 provider "google-beta" {
   project = var.project_id
@@ -180,11 +173,6 @@ resource "google_cloud_run_v2_service_iam_member" "allow_invoker" {
   member   = "serviceAccount:${google_service_account.scheduler_sa.email}"
 
   depends_on = [google_project_service.services, google_cloudfunctions2_function.mc_snapshot]
-}
-
-# สำคัญ: ให้ Cloud Scheduler “สร้าง OIDC token แทน scheduler_sa ได้”
-data "google_project" "p" {
-  project_id = var.project_id
 }
 
 resource "google_service_account_iam_member" "allow_scheduler_token_creator" {
