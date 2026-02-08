@@ -7,7 +7,7 @@ AUTHME_JAR_URL="https://github.com/AuthMe/AuthMeReloaded/releases/download/5.6.0
 
 # 1) ติดตั้งเครื่องมือที่ต้องใช้
 sudo apt-get update -y
-sudo apt-get install -y docker.io git docker-compose make cron wget
+sudo apt-get install -y docker.io git docker-compose make cron wget google-cloud-cli
 
 # 2) start services
 sudo systemctl enable --now docker
@@ -36,3 +36,6 @@ sudo make deploy
 
 # 6) ตั้ง cron ให้ flush ทุก 5 นาที
 ( sudo crontab -l 2>/dev/null; echo "*/5 * * * * docker exec mc-server rcon-cli save-all flush >>/var/log/mc-flush.log 2>&1" ) | sudo crontab -
+
+# 7. ตั้ง cron backup รายวัน
+( sudo crontab -l 2>/dev/null; echo "10 3 * * * bash /home/ubuntu/project/backup.sh >>/var/log/mc-backup.log 2>&1" ) | sudo crontab -

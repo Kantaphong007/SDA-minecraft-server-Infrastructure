@@ -30,6 +30,10 @@ resource "google_compute_instance" "vm_instance" {
     access_config {}
   }
 
+  service_account {
+    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+  }
+
   metadata_startup_script = file("${path.module}/setup.sh")
 
   tags = ["http-server"]
@@ -54,4 +58,13 @@ output "ip" {
 
 output "boot_disk_name" {
   value = google_compute_disk.minecraft_boot.name
+}
+
+data "google_project" "p" {}
+
+resource "google_storage_bucket_iam_member" "vm_can_write_backups" {
+  bucket = google_storage_bucket.backup_bucket.name
+  role   = "roles/storage.objectAdmin"
+
+  member = "serviceAccount:${data.google_project.p.number}-compute@developer.gserviceaccount.com"
 }
