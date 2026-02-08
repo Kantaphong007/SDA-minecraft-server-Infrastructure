@@ -31,7 +31,7 @@ cd "$APP_DIR/data/plugins"
 
 # 5) start minecraft (K8s / docker แล้วแต่ branch)
 cd "$APP_DIR"
-make deploy || true
+make deploy
 
 # 6) save flush ทุก 5 นาที
 ( sudo crontab -l 2>/dev/null; \
