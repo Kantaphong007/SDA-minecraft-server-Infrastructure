@@ -10,6 +10,15 @@ sudo apt-get update -y
 sudo apt-get install -y docker.io git docker-compose make cron wget python3 python3-pip
 sudo pip3 install psutil
 
+# Install Google Cloud SDK (gsutil) properly
+sudo apt-get install -y apt-transport-https ca-certificates gnupg curl
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+  | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update -y
+sudo apt-get install -y google-cloud-sdk
+
 # 2) start services
 sudo systemctl enable --now docker
 sudo systemctl enable --now cron
@@ -39,6 +48,8 @@ sudo make deploy
 ( sudo crontab -l 2>/dev/null; echo "*/5 * * * * docker exec mc-server rcon-cli save-all flush >>/var/log/mc-flush.log 2>&1" ) | sudo crontab -
 
 # 7. ตั้ง cron backup รายวัน
+# ensure backup.sh exists and executable
+sudo chmod +x "$APP_DIR/backup.sh" || true
 ( sudo crontab -l 2>/dev/null; echo "10 3 * * * bash /home/ubuntu/project/backup.sh >>/var/log/mc-backup.log 2>&1" ) | sudo crontab -
 
 echo "=== Create systemd service for mc_monitor ==="
